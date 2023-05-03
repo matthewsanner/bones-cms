@@ -53,5 +53,24 @@ app.post('/admin', async (req, res) => {
   res.redirect('/');
 });
 
+app.get('/posts/:postId', async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      // If the post is not found, return a 404 status and message
+      return res.status(404).send('The post with the given ID was not found.');
+    }
+
+    // If the post is found, render the view page with the post's information
+    res.render('post', { post });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Something went wrong...');
+  }
+});
+
 // Start the server and listen on port 3000
 app.listen(3000, () => console.log('Server listening on port 3000...'));
