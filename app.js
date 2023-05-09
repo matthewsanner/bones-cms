@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const app = express();
 
 // Connect to MongoDB
-const dbUrl = 'mongodb://127.0.0.1:27017/blog';
-mongoose.connect(dbUrl);
+
+mongoose.connect('mongodb+srv://BetoAdminHYE:dgTH1nQ6JBci7rjz@cluster0.rtla4.mongodb.net/bones');
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));
