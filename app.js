@@ -1,11 +1,18 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const app = express();
+
 
 // Connect to MongoDB
 
-mongoose.connect('mongodb+srv://BetoAdminHYE:dgTH1nQ6JBci7rjz@cluster0.rtla4.mongodb.net/bones');
+const dbUrl = process.env.DB_URL
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));
@@ -28,6 +35,9 @@ app.set('view engine', 'ejs');
 
 // Use body-parser middleware to parse HTTP request body
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Override default HTML method requests
+app.use(methodOverride('_method'));
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -70,7 +80,42 @@ app.get('/posts/:postId', async (req, res) => {
     console.error(err);
     res.status(500).send('Something went wrong...');
   }
+
 });
+
+app.get('/posts/delete/:postId', async (req, res) => {
+  const {postId} = req.params;
+  await Post.findByIdAndDelete(postId);
+  res.redirect(`/`);
+})
+
+app.get('/posts/edit/:postId', async (req, res) => {
+  const {postId} = req.params;
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      // If the post is not found, return a 404 status and message
+      return res.status(404).send('The post with the given ID was not found.');
+    }
+
+    // If the post is found, render the view page with the post's information
+    res.render('edit', { post });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Something went wrong...');
+  }
+
+})
+
+app.put('/posts/:postId', async (req, res) => {
+  const { postId } = req.params;
+  const { title, content }  = req.body.post
+  let post = await Post.findByIdAndUpdate(postId, {title, content});
+  await post.save()
+  const posts = await Post.find().sort('-date');
+  res.render('index', { posts });
+})
 
 // Start the server and listen on port 3000
 app.listen(3000, () => console.log('Server listening on port 3000...'));

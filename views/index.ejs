@@ -18,6 +18,8 @@
               <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
               <p><%= post.content %></p>
               <p><a href="/posts/<%= post._id %>">View full post</a></p>
+              <p><a href="/posts/edit/<%= post._id %>">Edit</a></p>
+              <p><a href="/posts/delete/<%= post._id %>">Delete</a></p>
             </div>
           </div>
         <% }); %>
