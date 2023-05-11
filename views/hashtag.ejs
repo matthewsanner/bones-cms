@@ -5,9 +5,9 @@
     <title>My Blog</title>
   </head>
   <body>
-    <h1>My Blog</h1>
+    <h1>My Blog - Hashtag <%= hashtag %></h1>
     <% if (posts.length === 0) { %>
-      <p>No posts yet.</p>
+      <p>No posts with hashtag <%= hashtag %> yet.</p>
     <% } else { %>
       <ul>
         <% posts.forEach(post => { %>
@@ -22,11 +22,9 @@
     <% } %>
     
     <% function addHashtagLinks(content) { %>
-      <% const hashtagRegex = /#\w+\b/g; %>
-      <% return content.replace(hashtagRegex, (match) => {
-         return `<a href="/hashtags/${match.substring(1)}">${match}</a>`;
-      }); %>
+      <% const hashtagRegex = /#(\w+)/g; %>
+      <% const linkTemplate = '<span><a href="/hashtags/$1">$&</a></span>'; %>
+      <% return content.replace(hashtagRegex, linkTemplate); %>
     <% } %>
-
   </body>
 </html>
