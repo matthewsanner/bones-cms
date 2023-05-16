@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 const app = express();
 
 // Connect to MongoDB
@@ -30,6 +31,7 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model('Post', postSchema);
 
 // Use EJS as our view engine
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 
 // Use body-parser middleware to parse HTTP request body

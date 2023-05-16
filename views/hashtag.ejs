@@ -1,30 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>My Blog</title>
-  </head>
-  <body>
-    <h1>My Blog - Hashtag <%= hashtag %></h1>
-    <% if (posts.length === 0) { %>
-      <p>No posts with hashtag <%= hashtag %> yet.</p>
-    <% } else { %>
-      <ul>
-        <% posts.forEach(post => { %>
-          <li>
-            <h2><%= post.title %></h2>
-            <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
-            <p><%- addHashtagLinks(post.content) %></p>
-            <p><a href="/posts/<%= post._id %>">View full post</a></p>
-          </li>
-        <% }); %>
-      </ul>
-    <% } %>
-    
-    <% function addHashtagLinks(content) { %>
-      <% const hashtagRegex = /#(\w+)/g; %>
-      <% const linkTemplate = '<span><a href="/hashtags/$1">$&</a></span>'; %>
-      <% return content.replace(hashtagRegex, linkTemplate); %>
-    <% } %>
-  </body>
-</html>
+<% layout('layouts/boilerplate') %>
+<h1>Hashtag: <%= hashtag %></h1>
+<p><a href="/">Back to all posts</a></p>
+<% if (posts.length === 0) { %>
+  <p>No posts with hashtag <%= hashtag %> yet.</p>
+<% } else { %>
+    <% posts.forEach(post => { %>
+      <div class="card">
+        <div class="card-body">
+          <h2><%= post.title %></h2>
+          <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
+          <p><%- addHashtagLinks(post.content) %></p>
+          <p><a href="/posts/<%= post._id %>">View full post</a></p>
+        </div>
+      </div>
+    <% }); %>
+<% } %>
+
+<% function addHashtagLinks(content) { %>
+  <% const hashtagRegex = /#(\w+)/g; %>
+  <% const linkTemplate = '<span><a href="/hashtags/$1">$&</a></span>'; %>
+  <% return content.replace(hashtagRegex, linkTemplate); %>
+<% } %>
