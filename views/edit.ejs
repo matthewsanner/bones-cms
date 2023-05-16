@@ -1,17 +1,22 @@
 <% layout('layouts/boilerplate') %>
-<form action="/posts/<%= post._id%>?_method=PUT" method="POST" novalidate class="validated-form">
-  <div class="mb-3">
-      <label class="form-label" for="title">Title</label>
-      <input class="form-control" type="text" id="title" name="post[title]"
-      value="<%= post.title%>" required>
+<div class="card container-md">
+  <div class="card-body">
+    <h1 class="card-title">Edit Post</h1>
+    <form action="/posts/<%= post._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+      <div class="mb-3">
+          <label class="form-label" for="title">Title</label>
+          <input class="form-control" type="text" id="title" name="post[title]"
+          value="<%= post.title%>" required>
+      </div>
+      <div class="mb-3">
+          <label class="form-label" for="content">Body</label>
+          <input class="form-control" type="text" id="content" name="post[content]" value="<%=post.content%>" required>
+      </div>
+      <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
+      <div class="mb-3">
+          <button class="btn btn-warning">Update Post</button>
+          <a class="btn btn-success ms-2" href="/">Back to Posts</a>
+      </div>
+    </form>
   </div>
-  <div class="mb-3">
-      <label class="form-label" for="content">Body</label>
-      <input class="form-control" type="text" id="content" name="post[content]" value="<%=post.content%>" required>
-  </div>
-  <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
-  <div class="mb-3">
-      <button class="btn btn-info">Update Post</button>
-      <a class="btn btn-success ms-2" href="/">Back to Posts</a>
-  </div>
-</form>
+</div>

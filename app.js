@@ -9,6 +9,8 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const app = express();
 
+const helpers = require('./helpers');
+
 // Connect to MongoDB
 const dbUrl = process.env.DB_URL;
 mongoose.connect(dbUrl);
@@ -46,7 +48,7 @@ app.use(express.static('public'));
 // Render the blog page with all posts
 app.get('/', async (req, res) => {
   const posts = await Post.find().sort('-date');
-  res.render('index', { posts });
+  res.render('index', { posts, addHashtagLinks: helpers.addHashtagLinks });
 });
 
 // Render the admin page with a form to add a new post
@@ -93,7 +95,7 @@ app.get('/posts/:postId', async (req, res) => {
     }
 
     // If the post is found, render the view page with the post's information
-    res.render('post', { post });
+    res.render('post', { post, addHashtagLinks: helpers.addHashtagLinks });
   } catch (err) {
     console.error(err);
     res.status(500).send('Something went wrong...');
@@ -132,7 +134,7 @@ app.put('/posts/:postId', async (req, res) => {
   let post = await Post.findByIdAndUpdate(postId, {title, content});
   await post.save()
   const posts = await Post.find().sort('-date');
-  res.render('index', { posts });
+  res.render('index', { posts, addHashtagLinks: addHashtagLinks.addHashtagLinks });
 })
 
 app.get('/hashtags/:hashtag', async (req, res) => {
@@ -142,7 +144,7 @@ app.get('/hashtags/:hashtag', async (req, res) => {
   const posts = await Post.find({ hashtags: hashtag });
 
   // Render the view page with the list of posts containing the hashtag
-  res.render('hashtag', { hashtag, posts });
+  res.render('hashtag', { hashtag, posts, addHashtagLinks: helpers.addHashtagLinks });
 });
 
 // Start the server and listen on port 3000

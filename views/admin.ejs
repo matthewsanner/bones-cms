@@ -1,9 +1,16 @@
 <% layout('layouts/boilerplate') %>
-<h1>Create Post</h1>
-<form action="/admin" method="post">
-  <label for="title">Title:</label><br>
-  <input type="text" id="title" name="title" class="wider-input"><br>
-  <label for="content">Content:</label><br>
-  <textarea id="content" name="content" rows="10" cols="30" class="wider-input"></textarea><br>
-  <button class="btn btn-info">Create Post</button>
-</form>
+<div class="card container-md">
+  <div class="card-body">
+    <h1 class="card-title">Create Post</h1>
+    <div class="card-text">
+      <form action="/admin" method="post">
+        <label class="form-label" for="title">Title:</label><br>
+        <input class="form-control" type="text" id="title" name="title"><br>
+        <label class="form-label" for="content">Content:</label><br>
+        <textarea class="form-control" id="content" name="content" rows="10"></textarea><br>
+        <button class="btn btn-primary">Create Post</button>
+        <a class="btn btn-success ms-2" href="/">Back to Posts</a>
+      </form>
+    </div>
+  </div>
+</div>
