@@ -2,6 +2,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+// Express & Standard Middleware
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -9,7 +10,8 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const app = express();
 
-const helpers = require('./helpers');
+let postsRouter = require('./routes/post')
+let adminRouter = require('./routes/admin')
 
 // Connect to MongoDB
 const dbUrl = process.env.DB_URL;
@@ -21,36 +23,26 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-// Define a schema for our blog post
-const postSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  hashtags: [String],
-  date: { type: Date, default: Date.now }
-});
+/* Connet App to Middleware
 
-// Create a model for our blog post
-const Post = mongoose.model('Post', postSchema);
-
-// Use EJS as our view engine
+EJS as View Engine */
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 
-// Use body-parser middleware to parse HTTP request body
+// Parse HTTP request body
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Override default HTML method requests
+// Override Default HTML Method Requests
 app.use(methodOverride('_method'));
 
-// Serve static files from the "public" directory
+// Serve Static Files from the "public" Directory
 app.use(express.static('public'));
 
-// Render the blog page with all posts
-app.get('/', async (req, res) => {
-  const posts = await Post.find().sort('-date');
-  res.render('index', { posts, addHashtagLinks: helpers.addHashtagLinks });
-});
+// Routes Declaration
+app.use('/posts', postsRouter);
+app.use('/admin', adminRouter);
 
+<<<<<<< HEAD
 // Render the admin page with a form to add a new post
 app.get('/admin', (req, res) => {
   res.render('admin');
@@ -148,4 +140,7 @@ app.get('/hashtags/:hashtag', async (req, res) => {
 });
 
 // Start the server and listen on port 3000
+=======
+// Listen on Port 3000
+>>>>>>> 162ba8c7cac12bdfbdf4c8ce501e93cb6fa83120
 app.listen(3000, () => console.log('Server listening on port 3000...'));
