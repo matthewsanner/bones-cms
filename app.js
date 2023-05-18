@@ -134,7 +134,7 @@ app.put('/posts/:postId', async (req, res) => {
   let post = await Post.findByIdAndUpdate(postId, {title, content});
   await post.save()
   const posts = await Post.find().sort('-date');
-  res.render('index', { posts, addHashtagLinks: addHashtagLinks.addHashtagLinks });
+  res.render('index', { posts, addHashtagLinks: helpers.addHashtagLinks });
 })
 
 app.get('/hashtags/:hashtag', async (req, res) => {
