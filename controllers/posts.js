@@ -8,7 +8,7 @@ exports.getPosts = async (req, res) => {
 };
 
 exports.findPost = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
     const post = await Post.findById(id);
 
@@ -27,13 +27,13 @@ exports.findPost = async (req, res) => {
 };
 
 exports.deletePost = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   await Post.findByIdAndDelete(id);
   res.redirect(`/posts`)
 };
 
 exports.viewEditPost = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
     const post = await Post.findById(id);
 
@@ -52,23 +52,19 @@ exports.viewEditPost = async (req, res) => {
 };
 
 exports.editPost = async (req, res) => {
-  
-  const {id} = req.params;
+  const { id } = req.params;
   const { title, content }  = req.body.post
   let post = await Post.findByIdAndUpdate(id, {title, content});
   await post.save()
-  const posts = await Post.find().sort('-date');
+  const posts = await Post.find();
   res.render('index', { posts, addHashtagLinks: helpers.addHashtagLinks });
 }
 
 exports.getHashtag = async (req, res) => {
-  console.log( "hit hashtag method", req.params)
   const { hashtag } = req.params;
-  console.log(hashtag)
 
   // Search for posts with the specified hashtag in the database
-  const posts = await Post.find({ hashtags: hashtag });
-  console.log(posts)
+  const posts = await Post.find({ hashtags: hashtag }).sort('-date');
 
   // Render the view page with the list of posts containing the hashtag
   res.render('hashtag', { hashtag, posts, addHashtagLinks: helpers.addHashtagLinks });

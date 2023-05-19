@@ -23,9 +23,9 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-/* Connet App to Middleware
+// Connect App to Middleware
 
-EJS as View Engine */
+// EJS as View Engine
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 
