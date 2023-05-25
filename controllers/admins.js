@@ -6,6 +6,8 @@ exports.viewAdmin = (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
+
+  console.log(req.body)
   
   const hashtagArray = (content) => {
     // Match all words starting with '#' and followed by any non-space character
