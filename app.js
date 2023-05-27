@@ -37,6 +37,8 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 
 // Parse HTTP request body
+
+/*app.use(bodyParser.json())*/
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Override Default HTML Method Requests

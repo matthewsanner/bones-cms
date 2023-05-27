@@ -8,10 +8,36 @@
         <label class="form-label" for="title">Title:</label><br>
         <input class="form-control" type="text" id="title" name="title"><br>
         <label class="form-label" for="content">Content:</label><br>
-        <textarea class="form-control" id="content" name="content" rows="10"></textarea><br>
-        <button class="btn btn-primary">Create Post</button>
-        <a class="btn btn-success ms-2" href="/posts">Back to Posts</a>
+        <div id="editor" style="height: 300px;"></div>
+        <textarea style="display: none;" id="content" name="content"></textarea>
+        <button class="btn btn-primary m-2">Create Post</button>
+        <a class="btn btn-success m-2" href="/posts">Back to Posts</a>
       </form>
     </div>
   </div>
 </div>
+
+<script>
+  var toolbarOptions = [
+    [{ header: [1, 2, false] }],
+    ['bold', 'italic', 'underline'],
+    ['image', 'code-block']
+  ];
+
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: toolbarOptions
+    },
+    placeholder: 'Compose an epic...',
+    theme: 'snow'
+  });
+
+  // Update the hidden textarea with HTML content when changes occur in the Quill editor
+  quill.on('text-change', function() {
+    var content = quill.root.innerHTML;
+    document.querySelector('#content').value = content;
+  });
+</script>
+
+
+
