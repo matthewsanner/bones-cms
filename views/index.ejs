@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate') %>
 <h1>Bones Blogging App</h1>
-<a class="btn btn-primary mb-2" href="http://localhost:3000/admin">Make a New Post</a>
+<a class="btn btn-primary mb-2" href="/admin">Make a New Post</a>
+<a class="btn btn-warning mb-2" href="/users/logout">Logout</a>
 <% if (posts.length === 0) { %>
   <p>No posts yet.</p>
 <% } else { %>
@@ -9,6 +10,7 @@
       <div class="card-body">
         <h2><%= post.title %></h2>
         <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
+        <p>Posted by: <%= post.username %></p>
         <p><%- addHashtagLinks(post.content) %></p>
         <p><a class="btn btn-info" href="/posts/<%= post._id %>">View full post</a></p>
       </div>

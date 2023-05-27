@@ -26,7 +26,8 @@ exports.createPost = async (req, res) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    hashtags: hashtagArray(req.body.content)
+    hashtags: hashtagArray(req.body.content),
+    author: req.user._id
   });
 
   await post.save();

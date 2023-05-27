@@ -9,6 +9,7 @@
         <div class="card-body">
           <h2><%= post.title %></h2>
           <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
+          <p>Posted by: <%= post.username %></p>
           <p><%- addHashtagLinks(post.content) %></p>
           <p><a class="btn btn-info" href="/posts/<%= post._id %>">View full post</a></p>
         </div>

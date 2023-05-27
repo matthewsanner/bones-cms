@@ -2,7 +2,8 @@
 <div class="card container-md">
   <div class="card-body">
     <h1 class="card-title">Edit Post</h1>
-    <form action="/posts/<%= post._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+    <form action="/posts/<%= post._id%>?_method=PUT" method="POST">
+    <!-- May want to add this back in with validation in place - 'class="validated-form" novalidate' -->
       <div class="mb-3">
           <label class="form-label" for="title">Title</label>
           <input class="form-control" type="text" id="title" name="post[title]"
