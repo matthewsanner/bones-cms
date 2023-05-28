@@ -5,11 +5,11 @@
     <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
     <p>Posted by: <%= user.username %></p>
     <p><%- addHashtagLinks(post.content) %></p>
-    <p>
+    <% if (currentUser && post.author.equals(currentUser._id)) { %>
       <a class="btn btn-warning" href="/posts/edit/<%= post._id %>">Edit</a>
-      <button class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-      <a class="btn btn-success ms-2" href="/posts">Back to posts</a>
-    </p>
+      <button class="btn btn-danger ms-2 me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    <% } %>
+    <a class="btn btn-success" href="/posts">Back to posts</a>
   </div>
 </div>
 

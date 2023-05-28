@@ -49,7 +49,7 @@ exports.findPost = async (req, res) => {
 exports.deletePost = async (req, res) => {
   const { id } = req.params;
   await Post.findByIdAndDelete(id);
-  res.redirect(`/posts`)
+  res.redirect('/posts')
 };
 
 exports.viewEditPost = async (req, res) => {
@@ -76,8 +76,7 @@ exports.editPost = async (req, res) => {
   const { title, content }  = req.body.post
   let post = await Post.findByIdAndUpdate(id, {title, content});
   await post.save()
-  const posts = await Post.find();
-  res.render('index', { posts, addHashtagLinks: helpers.addHashtagLinks });
+  res.redirect(`/posts/${id}`)
 }
 
 exports.getHashtag = async (req, res) => {

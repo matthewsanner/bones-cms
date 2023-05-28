@@ -1,12 +1,17 @@
 <% layout('layouts/boilerplate') %>
 <h1>Bones Blogging App</h1>
-<a class="btn btn-primary mb-2" href="/admin">Make a New Post</a>
-<a class="btn btn-warning mb-2" href="/users/logout">Logout</a>
+<% if(!currentUser) {%>
+  <a class="btn btn-warning mb-2" href="/users/register">Register</a>
+  <a class="btn btn-success mb-2" href="/users/login">Login</a>
+<% } else { %>
+  <a class="btn btn-primary mb-2" href="/admin">Make a New Post</a>
+  <a class="btn btn-danger mb-2" href="/users/logout">Logout</a>
+<% } %>
 <% if (posts.length === 0) { %>
   <p>No posts yet.</p>
 <% } else { %>
   <% posts.forEach(post => { %>
-    <div class="card">
+    <div class="card my-3">
       <div class="card-body">
         <h2><%= post.title %></h2>
         <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>

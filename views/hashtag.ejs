@@ -5,7 +5,7 @@
   <p>No posts with hashtag <%= hashtag %> yet.</p>
 <% } else { %>
     <% posts.forEach(post => { %>
-      <div class="card">
+      <div class="card my-3">
         <div class="card-body">
           <h2><%= post.title %></h2>
           <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
