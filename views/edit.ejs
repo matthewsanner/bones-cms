@@ -16,7 +16,7 @@
       <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
       <div class="mb-3">
           <button class="btn btn-warning">Update Post</button>
-          <a class="btn btn-success ms-2" href="/posts">Back to Posts</a>
+          <a class="btn btn-success ms-2" href="/posts/<%= post._id%>">Back to Post</a>
       </div>
     </form>
   </div>

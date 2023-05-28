@@ -17,7 +17,6 @@ const User = require('./models/user');
 const app = express();
 
 let postsRouter = require('./routes/post')
-let adminRouter = require('./routes/admin')
 let usersRouter= require('./routes/user')
 
 // Connect to MongoDB
@@ -94,7 +93,6 @@ app.use((req, res, next) => {
 
 // Routes Declaration
 app.use('/posts', postsRouter);
-app.use('/admin', adminRouter);
 app.use('/users', usersRouter);
 
 // Listen on Port 3000
