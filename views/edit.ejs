@@ -5,13 +5,13 @@
     <form action="/posts/<%= post._id%>?_method=PUT" method="POST">
     <!-- May want to add this back in with validation in place - 'class="validated-form" novalidate' -->
       <div class="mb-3">
-          <label class="form-label" for="title">Title</label>
-          <input class="form-control" type="text" id="title" name="post[title]"
-          value="<%= post.title%>" required>
+        <label class="form-label" for="title">Title</label>
+        <input class="form-control" type="text" id="title" name="post[title]" value="<%= post.title %>" required>
       </div>
       <div class="mb-3">
-          <label class="form-label" for="content">Body</label>
-          <input class="form-control" type="text" id="content" name="post[content]" value="<%=post.content%>" required>
+        <label class="form-label" for="content">Body</label>
+        <div id="editor" style="height: 300px;" required><%- unescape(post.content) %></div>
+        <input style="display: none;" id="content" name="post[content]" required>
       </div>
       <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
       <div class="mb-3">
@@ -21,3 +21,35 @@
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toolbarOptions = [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline'],
+      ['image', 'code-block']
+    ];
+
+    // Initialize the Quill editor
+    var quill = new Quill('#editor', {
+      modules: {
+        toolbar: toolbarOptions
+      },
+      theme: 'snow'
+    });
+
+    // Get the content value from the server-side rendering
+    var contentValue = "<%- unescape(post.content) %>";
+
+    // Set the initial content of the Quill editor
+    var quillClipboard = quill.getModule('clipboard');
+    quillClipboard.dangerouslyPasteHTML(contentValue);
+
+    // Update the hidden textarea with HTML content when changes occur in the Quill editor
+    quill.on('text-change', function() {
+      var content = quill.root.innerHTML;
+      document.querySelector('#content').value = content;
+    });
+  });
+</script>
+

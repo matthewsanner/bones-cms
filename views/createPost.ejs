@@ -34,7 +34,7 @@
 
   // Update the hidden textarea with HTML content when changes occur in the Quill editor
   quill.on('text-change', function() {
-    var content = quill.root.innerHTML;
+    let content = quill.root.innerHTML;
     document.querySelector('#content').value = content;
   });
 </script>
