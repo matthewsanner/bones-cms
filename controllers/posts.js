@@ -43,6 +43,7 @@ exports.viewEditPost = async (req, res) => {
     }
 
     // If the post is found, render the view page with the post's information
+    console.log('this is the post object to be edited:', post)
     res.render('edit', { post });
   } catch (err) {
     console.error(err);
@@ -52,6 +53,7 @@ exports.viewEditPost = async (req, res) => {
 };
 
 exports.editPost = async (req, res) => {
+  console.log("this is the edited object sent via put to api", req.body.post)
   const { id } = req.params;
   const { title, content }  = req.body.post
   let post = await Post.findByIdAndUpdate(id, {title, content});
