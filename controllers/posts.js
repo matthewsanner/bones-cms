@@ -106,7 +106,6 @@ exports.viewEditPost = async (req, res) => {
 };
 
 exports.editPost = async (req, res) => {
-  console.log("this is the edited object sent via put to api", req.body.post)
   const { id } = req.params;
   const { title, content }  = req.body.post
   let post = await Post.findByIdAndUpdate(id, {title, content});
