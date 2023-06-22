@@ -6,8 +6,8 @@ module.exports.renderRegister = (req, res) => {
 
 module.exports.register = async (req, res, next) => {
     try {
-        const { username, password } = req.body;
-        const user = new User({ username });
+        const { username, email, password } = req.body;
+        const user = new User({ username, email, password });
         const registeredUser = await User.register(user, password);
         // login user after registration using passport helper method
         req.login(registeredUser, err => {
