@@ -7,12 +7,17 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  password: {
+  email: {
     type: String,
     required: true
   },
-  email: {
+  verificationToken: {
     type: String,
+    required: false
+  },
+  verified: {
+    type: Boolean,
+    default: false,
     required: true
   }
 });

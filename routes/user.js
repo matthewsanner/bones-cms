@@ -3,10 +3,13 @@ const router = express.Router();
 const passport = require('passport');
 const catchAsync = require('../utilities/catchAsync');
 const users = require('../controllers/users');
+const verifyToken = require('../verifyToken');
 
 router.route('/register')
     .get(users.renderRegister)
     .post(catchAsync(users.register));
+
+router.get('/verify/:token', verifyToken, users.handleVerifyToken);
 
 router.route('/login')
     .get(users.renderLogin)
