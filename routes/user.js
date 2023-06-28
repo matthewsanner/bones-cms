@@ -11,6 +11,14 @@ router.route('/register')
 
 router.get('/verify/:token', verifyToken, users.handleVerifyToken);
 
+router.route('/forgot')
+    .get(users.renderForgot)
+    .post(users.forgot);
+
+router.get('/forgot/:token', verifyToken, users.renderChangePassword);
+
+router.post('/newpassword', users.newPassword);
+
 router.route('/login')
     .get(users.renderLogin)
     .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login);

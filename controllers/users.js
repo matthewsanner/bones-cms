@@ -49,14 +49,69 @@ module.exports.handleVerifyToken = async (req, res) => {
     const username = req.username;
 
     // Update user's account status as verified
-    await User.updateOne({ username: username }, { $set: { verified: true },  $unset: { verificationToken: 1 } });
+    await User.updateOne({ username: username }, { $set: { verified: true, verificationToken: "" }});
 
-    res.send('Email verified successfully');
+    res.send('Email verified successfully!');
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).send('Internal Server Error');
   }
 };
+
+module.exports.renderForgot = (req, res) => {
+    res.render('forgot');
+}
+
+module.exports.forgot = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const verificationToken = generateVerificationToken();
+        const verificationLink = `http://localhost:3000/users/forgot/${verificationToken}`;
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Reset your password',
+            html: `<p>Please click the following link to reset your password:</p>
+           <a href="${verificationLink}">Reset Password</a>`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Failed to send verification email');
+            } else {
+                console.log('Email sent: ' + info.response);
+                res.status(200).send('Verification email sent');
+            }
+        });
+
+        // before this step we need to verify that the account is verified
+        await User.updateOne({ email: email }, { $set: { verificationToken: verificationToken }});
+
+        res.send('Reset password email sent!');
+
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('register')
+    }
+}
+
+module.exports.renderChangePassword = (req, res) => {
+    res.render('changePassword', { username: req.username });
+}
+
+// FIX THIS
+module.exports.newPassword = async(req, res) => {
+    console.log(req.username)
+    console.log(req.password)
+    try {
+        await User.updateOne({ username: req.username }, { $set: { password: req.password }});
+        
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('register')
+    }
+}
 
 module.exports.renderLogin = (req, res) => {
     res.render('login');
