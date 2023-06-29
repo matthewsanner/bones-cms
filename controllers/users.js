@@ -2,6 +2,8 @@ const User = require('../models/user');
 const generateVerificationToken = require('../tokenGenerator');
 const transporter = require('../email');
 const tokenGenerator = require('../tokenGenerator');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 module.exports.renderRegister = (req, res) => {
     res.render('register');
@@ -40,7 +42,7 @@ module.exports.register = async (req, res, next) => {
 
     } catch (e) {
         req.flash('error', e.message);
-        res.redirect('register')
+        res.redirect('/users/register')
     }
 }
 
@@ -91,7 +93,7 @@ module.exports.forgot = async (req, res) => {
         res.send('Reset password email sent!');
 
     } catch (e) {
-        req.flash('error', e.message);
+        // req.flash('error', e.message);
         res.redirect('register')
     }
 }
@@ -101,17 +103,31 @@ module.exports.renderChangePassword = (req, res) => {
 }
 
 // FIX THIS
-module.exports.newPassword = async(req, res) => {
-    console.log(req.username)
-    console.log(req.password)
+module.exports.newPassword = async (req, res) => {
+    const { username, password } = req.body;
+
     try {
-        await User.updateOne({ username: req.username }, { $set: { password: req.password }});
-        
-    } catch (e) {
-        req.flash('error', e.message);
-        res.redirect('register')
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            req.flash('error', 'User not found');
+            return res.redirect('register');
+        }
+
+        // Set the new password using Passport's setPassword method
+        await user.setPassword(password);
+
+        await user.save();
+
+        res.send('Password was reset!');
+        // req.flash('success', 'Password updated successfully');
+        // res.redirect('/users/login');
+    } catch (err) {
+        // req.flash('error', err.message);
+        res.redirect('register');
     }
-}
+};
+
 
 module.exports.renderLogin = (req, res) => {
     res.render('login');
