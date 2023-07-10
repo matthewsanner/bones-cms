@@ -12,13 +12,9 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  verificationToken: {
   token: {
     type: String,
-    required: true
-  }, 
-  verified: {
-    type: Boolean,
-    default: false,
     required: true
   }
 });

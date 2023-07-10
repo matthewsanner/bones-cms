@@ -6,7 +6,7 @@ const verifyToken = async (req, res, next) => {
 
   try {
     // Verify the token against the stored value in MongoDB using the User model
-    const user = await User.findOne({ token: token });
+    const user = await User.findOne({ verificationToken: token });
 
     if (!user) {
       return res.send('Invalid token');
@@ -21,6 +21,6 @@ const verifyToken = async (req, res, next) => {
     console.error('Error verifying token:', error);
     res.status(500).send('Internal Server Error');
   }
-}
+};
 
-module.exports = verifyToken
+module.exports = verifyToken;

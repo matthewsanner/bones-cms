@@ -4,10 +4,21 @@ const passport = require('passport');
 const catchAsync = require('../utilities/catchAsync');
 const verifyToken = require('../verifyToken')
 const users = require('../controllers/users');
+const verifyToken = require('../verifyToken');
 
 router.route('/register')
     .get(users.renderRegister)
     .post(catchAsync(users.register));
+
+router.get('/verify/:token', verifyToken, users.handleVerifyToken);
+
+router.route('/forgot')
+    .get(users.renderForgot)
+    .post(users.forgot);
+
+router.get('/forgot/:token', verifyToken, users.renderChangePassword);
+
+router.post('/newpassword', users.newPassword);
 
 router.route('/login')
     .get(users.renderLogin)
