@@ -67,10 +67,12 @@ module.exports.handleVerifyToken = async (req, res) => {
       { $set: { verified: true, verificationToken: "" } }
     );
 
-    res.send("Email verified successfully!");
+    req.flash("success", "Email verified successfully!");
+    res.redirect("/posts");
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(500).send("Internal Server Error");
+    req.flash("error", "Email was not successfully verified");
+    res.redirect("/posts");
   }
 };
 
