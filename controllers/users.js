@@ -12,6 +12,10 @@ module.exports.renderRegister = (req, res) => {
 module.exports.register = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return res.status(400).json({ error: 'Email is already taken' });
+        }
         const verificationToken = generateVerificationToken();
         const verificationLink = `http://localhost:3000/users/verify/${verificationToken}`;
         const mailOptions = {
