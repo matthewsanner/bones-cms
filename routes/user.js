@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const catchAsync = require('../utilities/catchAsync');
+const verifyToken = require('../verifyToken')
 const users = require('../controllers/users');
 
 router.route('/register')
@@ -13,5 +14,7 @@ router.route('/login')
     .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login);
 
 router.get('/logout', users.logout);
+
+router.get('/verify/:token', verifyToken, users.verify)
 
 module.exports = router;

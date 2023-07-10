@@ -2,17 +2,23 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
+
 const UserSchema = new Schema({
   username: {
     type: String,
     required: true
   },
-  password: {
+  email: {
     type: String,
     required: true
   },
-  email: {
+  token: {
     type: String,
+    required: true
+  }, 
+  verified: {
+    type: Boolean,
+    default: false,
     required: true
   }
 });
@@ -20,4 +26,6 @@ const UserSchema = new Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 const User = mongoose.model('User', UserSchema);
+;
+
 module.exports = User;
