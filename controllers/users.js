@@ -12,9 +12,14 @@ module.exports.renderRegister = (req, res) => {
 module.exports.register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       req.flash("error", "An account is already registered with this email");
+      return res.redirect("/users/register");
+    }
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      req.flash("error", "This username is taken, please choose a new one");
       return res.redirect("/users/register");
     }
     const verificationToken = generateVerificationToken();
