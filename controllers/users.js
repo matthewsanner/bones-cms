@@ -37,9 +37,9 @@ module.exports.register = async (req, res, next) => {
     let verificationEmailFlashMessage;
 
     // Send verification email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error(error);
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error(err);
         verificationEmailFlashMessage = "Failed to send verification email";
       } else {
         console.log("Email sent: " + info.response);
@@ -56,8 +56,8 @@ module.exports.register = async (req, res, next) => {
         res.redirect("/posts");
       });
     });
-  } catch (e) {
-    req.flash("error", e.message);
+  } catch (err) {
+    req.flash("error", err.message);
     res.redirect("/users/register");
   }
 };
@@ -74,8 +74,8 @@ module.exports.handleVerifyToken = async (req, res) => {
 
     req.flash("success", "Email verified successfully!");
     res.redirect("/posts");
-  } catch (error) {
-    console.error("Error updating user:", error);
+  } catch (err) {
+    console.error("Error updating user:", err);
     req.flash("error", "Email was not successfully verified");
     res.redirect("/posts");
   }
@@ -104,9 +104,9 @@ module.exports.forgot = async (req, res) => {
       { $set: { verificationToken: verificationToken } }
     );
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error(error);
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error(err);
         throw new Error("Failed to send reset password email");
       } else {
         console.log("Email sent: " + info.response);
@@ -114,8 +114,8 @@ module.exports.forgot = async (req, res) => {
         res.redirect("/posts");
       }
     });
-  } catch (e) {
-    req.flash("error", e.message);
+  } catch (err) {
+    req.flash("error", err.message);
     res.redirect("/posts");
   }
 };
@@ -162,7 +162,6 @@ module.exports.logout = (req, res) => {
   req.logout((err) => {
     if (err) return next(err);
     req.flash("success", "Logged out!");
-    const redirectUrl = "/posts";
-    res.redirect(redirectUrl);
+    res.redirect("/posts");
   });
 };

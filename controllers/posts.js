@@ -19,10 +19,11 @@ exports.getPosts = async (req, res) => {
       posts: postsWithUsernames,
       addHashtagLinks: helpers.addHashtagLinks,
     });
-  } catch (error) {
+  } catch (err) {
     // Handle any errors
-    console.error(error);
-    res.status(500).send("Server Error");
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/posts");
   }
 };
 
@@ -31,11 +32,11 @@ exports.findPost = async (req, res) => {
   try {
     const post = await Post.findById(id);
 
-    const user = await User.findById(post.author);
-
     if (!post) {
       throw new Error("Post not found!");
     }
+
+    const user = await User.findById(post.author);
 
     // If the post is found, render the view page with the post's information
     res.render("post", {
@@ -78,14 +79,27 @@ exports.createPost = async (req, res) => {
     author: req.user._id,
   });
 
-  await post.save();
-  res.redirect("/posts");
+  try {
+    await post.save();
+    req.flash("success", "Post created successfully!");
+    res.redirect("/posts");
+  } catch {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/posts");
+  }
 };
 
 exports.deletePost = async (req, res) => {
   const { id } = req.params;
-  await Post.findByIdAndDelete(id);
-  res.redirect("/posts");
+  try {
+    await Post.findByIdAndDelete(id);
+    res.redirect("/posts");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect(`/posts/${id}`);
+  }
 };
 
 exports.viewEditPost = async (req, res) => {
@@ -94,45 +108,83 @@ exports.viewEditPost = async (req, res) => {
     const post = await Post.findById(id);
 
     if (!post) {
-      // If the post is not found, return a 404 status and message
-      return res.status(404).send("The post with the given ID was not found.");
+      throw new Error("The post with the given ID was not found");
     }
 
     // If the post is found, render the view page with the post's information
-    console.log("this is the post object to be edited:", post);
     res.render("edit", { post });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Something went wrong...");
+    req.flash("error", err.message);
+    res.redirect("/posts");
   }
 };
 
 exports.editPost = async (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body.post;
-  let post = await Post.findByIdAndUpdate(id, { title, content });
-  await post.save();
-  res.redirect(`/posts/${id}`);
+
+  const hashtagArray = (content) => {
+    // Match all words starting with '#' and followed by any non-space character
+    const hashtagRegex = /#\w+\b/g;
+
+    // Extract all the hashtags from the post content
+    const hashtags = content.match(hashtagRegex);
+
+    // If no hashtags are found, return an empty array
+    if (!hashtags) {
+      return [];
+    }
+
+    // Remove the '#' symbol from each hashtag and return the result
+    return hashtags.map((hashtag) => hashtag.substring(1));
+  };
+
+  const updatedPost = {
+    title,
+    content,
+    hashtags: hashtagArray(content),
+  };
+
+  try {
+    const post = await Post.findByIdAndUpdate(id, updatedPost, { new: true });
+
+    if (!post) {
+      throw new Error("The post with the given ID was not found");
+    }
+
+    req.flash("success", "The post was updated successfully!");
+    res.redirect(`/posts/${id}`);
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect(`/posts/${id}`);
+  }
 };
 
 exports.getHashtag = async (req, res) => {
   const { hashtag } = req.params;
+  try {
+    // Search for posts with the specified hashtag in the database
+    const posts = await Post.find({ hashtags: hashtag }).sort("-date");
 
-  // Search for posts with the specified hashtag in the database
-  const posts = await Post.find({ hashtags: hashtag }).sort("-date");
+    const postsWithUsernames = await Promise.all(
+      posts.map(async (post) => {
+        const user = await User.findById(post.author);
+        const username = user ? user.username : "Unknown"; // Set a default username if user is not found
+        return { ...post.toObject(), username };
+      })
+    );
 
-  const postsWithUsernames = await Promise.all(
-    posts.map(async (post) => {
-      const user = await User.findById(post.author);
-      const username = user ? user.username : "Unknown"; // Set a default username if user is not found
-      return { ...post.toObject(), username };
-    })
-  );
-
-  // Render the view page with the list of posts containing the hashtag
-  res.render("hashtag", {
-    hashtag,
-    posts: postsWithUsernames,
-    addHashtagLinks: helpers.addHashtagLinks,
-  });
+    // Render the view page with the list of posts containing the hashtag
+    res.render("hashtag", {
+      hashtag,
+      posts: postsWithUsernames,
+      addHashtagLinks: helpers.addHashtagLinks,
+    });
+  } catch {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect(`/posts/hashtags/${hashtag}`);
+  }
 };
