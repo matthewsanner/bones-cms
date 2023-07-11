@@ -154,14 +154,17 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
   req.flash("success", "Welcome back!");
-  const redirectUrl = "/posts";
-  res.redirect(redirectUrl);
+  res.redirect("/posts");
 };
 
-module.exports.logout = (req, res) => {
-  req.logout((err) => {
-    if (err) return next(err);
+module.exports.logout = async (req, res) => {
+  try {
+    req.logout();
     req.flash("success", "Logged out!");
     res.redirect("/posts");
-  });
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "An error occurred during logout. Please try again.");
+    res.redirect("/posts");
+  }
 };
