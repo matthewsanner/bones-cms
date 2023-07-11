@@ -88,6 +88,19 @@ module.exports.renderForgot = (req, res) => {
 module.exports.forgot = async (req, res) => {
   try {
     const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("No user found with this email address");
+    }
+
+    if (!user.verified) {
+      throw new Error(
+        "Please verify your account before resetting the password"
+      );
+    }
+
     const verificationToken = generateVerificationToken();
     const verificationLink = `http://localhost:3000/users/forgot/${verificationToken}`;
     const mailOptions = {
@@ -98,7 +111,6 @@ module.exports.forgot = async (req, res) => {
            <a href="${verificationLink}">Reset Password</a>`,
     };
 
-    // FIX: before this step we need to verify that the account is verified
     await User.updateOne(
       { email: email },
       { $set: { verificationToken: verificationToken } }
@@ -106,7 +118,6 @@ module.exports.forgot = async (req, res) => {
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.error(err);
         throw new Error("Failed to send reset password email");
       } else {
         console.log("Email sent: " + info.response);
@@ -115,8 +126,9 @@ module.exports.forgot = async (req, res) => {
       }
     });
   } catch (err) {
+    console.error(err);
     req.flash("error", err.message);
-    res.redirect("/posts");
+    res.redirect("/users/forgot");
   }
 };
 
@@ -157,11 +169,15 @@ module.exports.login = (req, res) => {
   res.redirect("/posts");
 };
 
-module.exports.logout = async (req, res) => {
+module.exports.logout = async (req, res, next) => {
   try {
-    req.logout();
-    req.flash("success", "Logged out!");
-    res.redirect("/posts");
+    req.logout((err) => {
+      if (err) {
+        throw new Error("An error occurred during logout. Please try again.");
+      }
+      req.flash("success", "Logged out!");
+      res.redirect("/posts");
+    });
   } catch (err) {
     console.error(err);
     req.flash("error", "An error occurred during logout. Please try again.");
