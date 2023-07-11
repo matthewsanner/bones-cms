@@ -2,31 +2,60 @@
 <div class="card">
   <div class="card-body">
     <h2><%= post.title %></h2>
-    <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
+    <p>
+      <%= post.date.toLocaleDateString() %>, <%=
+      post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      %>
+    </p>
+    <% if (user) { %>
     <p>Posted by: <%= user.username %></p>
+    <% } else { %>
+    <p>Posted by: Unknown user</p>
+    <% } %>
     <p><%- addHashtagLinks(post.content) %></p>
     <% if (currentUser && post.author.equals(currentUser._id)) { %>
-      <a class="btn btn-warning" href="/posts/edit/<%= post._id %>">Edit</a>
-      <button class="btn btn-danger ms-2 me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    <a class="btn btn-warning" href="/posts/edit/<%= post._id %>">Edit</a>
+    <button
+      class="btn btn-danger ms-2 me-2"
+      data-bs-toggle="modal"
+      data-bs-target="#deleteModal"
+    >
+      Delete
+    </button>
     <% } %>
     <a class="btn btn-success" href="/posts">Back to posts</a>
   </div>
 </div>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <p>Are you sure you want to delete this post?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <a class="btn btn-danger" href="/posts/delete/<%= post._id %>">Delete</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <a class="btn btn-danger" href="/posts/delete/<%= post._id %>"
+          >Delete</a
+        >
       </div>
     </div>
   </div>
