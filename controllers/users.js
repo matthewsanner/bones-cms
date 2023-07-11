@@ -39,7 +39,6 @@ module.exports.register = async (req, res, next) => {
     // Send verification email
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.error(err);
         verificationEmailFlashMessage = "Failed to send verification email";
       } else {
         console.log("Email sent: " + info.response);
@@ -57,6 +56,7 @@ module.exports.register = async (req, res, next) => {
       });
     });
   } catch (err) {
+    console.error(err);
     req.flash("error", err.message);
     res.redirect("/users/register");
   }
@@ -155,6 +155,7 @@ module.exports.newPassword = async (req, res) => {
     req.flash("success", "Password updated successfully");
     res.redirect("/users/login");
   } catch (err) {
+    console.error(err);
     req.flash("error", err.message);
     res.redirect("/users/register");
   }
