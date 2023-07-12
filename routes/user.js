@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const catchAsync = require("../utilities/catchAsync");
 const users = require("../controllers/users");
-const verifyToken = require("../verifyToken");
+const verifyToken = require("../utilities/verifyToken");
 
 router
   .route("/register")

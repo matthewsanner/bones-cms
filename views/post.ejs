@@ -14,7 +14,7 @@
     <% } %>
     <p><%- addHashtagLinks(post.content) %></p>
     <% if (currentUser && post.author.equals(currentUser._id)) { %>
-    <a class="btn btn-warning" href="/posts/edit/<%= post._id %>">Edit</a>
+    <a class="btn btn-warning" href="/edit/<%= post._id %>">Edit</a>
     <button
       class="btn btn-danger ms-2 me-2"
       data-bs-toggle="modal"
@@ -23,7 +23,7 @@
       Delete
     </button>
     <% } %>
-    <a class="btn btn-success" href="/posts">Back to posts</a>
+    <a class="btn btn-success" href="/">Back to posts</a>
   </div>
 </div>
 
@@ -53,7 +53,7 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Cancel
         </button>
-        <a class="btn btn-danger" href="/posts/delete/<%= post._id %>"
+        <a class="btn btn-danger" href="/delete/<%= post._id %>"
           >Delete</a
         >
       </div>

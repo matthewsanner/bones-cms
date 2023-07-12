@@ -1,12 +1,12 @@
 let express = require('express');
 const router = express.Router();
 router.use(express.json());
-const catchAsync = require('../utilities/catchAsync');
 const postController = require('../controllers/posts');
-const { isLoggedIn, isAuthor } = require('../middleware');
+const catchAsync = require('../utilities/catchAsync');
+const isLoggedIn = require('../utilities/isLoggedIn');
+const isAuthor = require('../utilities/isAuthor');
 
 router.get('/', catchAsync(postController.getPosts));
-
 router.get('/create-post', isLoggedIn, postController.viewCreatePost);
 router.post('/create-post', isLoggedIn, catchAsync(postController.createPost));
 // this should be a delete route, fix later

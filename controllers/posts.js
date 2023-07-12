@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
-const helpers = require("../helpers");
+const addHashtagLinks = require("../utilities/addHashtagLinks");
 
 exports.getPosts = async (req, res) => {
   try {
@@ -17,13 +17,13 @@ exports.getPosts = async (req, res) => {
 
     res.render("index", {
       posts: postsWithUsernames,
-      addHashtagLinks: helpers.addHashtagLinks,
+      addHashtagLinks: addHashtagLinks,
     });
   } catch (err) {
     // Handle any errors
     console.error(err);
     req.flash("error", err.message);
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };
 
@@ -42,7 +42,7 @@ exports.findPost = async (req, res) => {
     res.render("post", {
       post,
       user,
-      addHashtagLinks: helpers.addHashtagLinks,
+      addHashtagLinks: addHashtagLinks,
     });
   } catch (err) {
     console.error(err);
@@ -82,11 +82,11 @@ exports.createPost = async (req, res) => {
   try {
     await post.save();
     req.flash("success", "Post created successfully!");
-    res.redirect("/posts");
+    res.redirect("/");
   } catch {
-    console.error(err);
-    req.flash("error", err.message);
-    res.redirect("/posts");
+    console.error(error);
+    req.flash("error", error.message);
+    res.redirect("/");
   }
 };
 
@@ -94,11 +94,11 @@ exports.deletePost = async (req, res) => {
   const { id } = req.params;
   try {
     await Post.findByIdAndDelete(id);
-    res.redirect("/posts");
+    res.redirect("/");
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect(`/posts/${id}`);
+    res.redirect(`/${id}`);
   }
 };
 
@@ -116,7 +116,7 @@ exports.viewEditPost = async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };
 
@@ -154,11 +154,11 @@ exports.editPost = async (req, res) => {
     }
 
     req.flash("success", "The post was updated successfully!");
-    res.redirect(`/posts/${id}`);
+    res.redirect(`/${id}`);
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect(`/posts/${id}`);
+    res.redirect(`/${id}`);
   }
 };
 
@@ -180,11 +180,11 @@ exports.getHashtag = async (req, res) => {
     res.render("hashtag", {
       hashtag,
       posts: postsWithUsernames,
-      addHashtagLinks: helpers.addHashtagLinks,
+      addHashtagLinks: addHashtagLinks,
     });
   } catch {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect(`/posts/hashtags/${hashtag}`);
+    res.redirect(`/hashtags/${hashtag}`);
   }
 };
