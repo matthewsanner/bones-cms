@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const catchAsync = require("../utilities/catchAsync");
 const users = require("../controllers/users");
 const verifyToken = require("../utilities/verifyToken");
 const isLoggedIn = require("../utilities/isLoggedIn");
