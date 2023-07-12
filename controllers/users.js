@@ -6,7 +6,13 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 module.exports.renderRegister = (req, res) => {
-  res.render("register");
+  try {
+    res.render("register");
+  } catch {
+    console.error(err);
+    req.flash("error", "There was an error rendering the page");
+    res.redirect("/");
+  }
 };
 
 module.exports.register = async (req, res, next) => {
@@ -82,7 +88,13 @@ module.exports.handleVerifyToken = async (req, res) => {
 };
 
 module.exports.renderForgot = (req, res) => {
-  res.render("forgot");
+  try {
+    res.render("forgot");
+  } catch {
+    console.error(err);
+    req.flash("error", "There was an error rendering the page");
+    res.redirect("/users/login");
+  }
 };
 
 module.exports.forgot = async (req, res) => {
@@ -133,7 +145,13 @@ module.exports.forgot = async (req, res) => {
 };
 
 module.exports.renderChangePassword = (req, res) => {
-  res.render("changePassword", { username: req.username });
+  try {
+    res.render("changePassword", { username: req.username });
+  } catch {
+    console.error(err);
+    req.flash("error", "There was an error rendering the page");
+    res.redirect("/");
+  }
 };
 
 module.exports.newPassword = async (req, res) => {
@@ -162,12 +180,24 @@ module.exports.newPassword = async (req, res) => {
 };
 
 module.exports.renderLogin = (req, res) => {
-  res.render("login");
+  try {
+    res.render("login");
+  } catch {
+    console.error(err);
+    req.flash("error", "There was an error rendering the page");
+    res.redirect("/");
+  }
 };
 
 module.exports.login = (req, res) => {
-  req.flash("success", "Welcome back!");
-  res.redirect("/");
+  try {
+    req.flash("success", "Welcome back!");
+    res.redirect("/");
+  } catch {
+    console.error(err);
+    req.flash("error", "There was an error logging in");
+    res.redirect("/");
+  }
 };
 
 module.exports.logout = async (req, res, next) => {
