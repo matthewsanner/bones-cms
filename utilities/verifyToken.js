@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const User = require("./models/user");
+const User = require("../models/user");
 
 // FIX: need to update error handling to newer more user friendly version
 const verifyToken = async (req, res, next) => {

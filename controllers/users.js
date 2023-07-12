@@ -1,7 +1,7 @@
 const User = require("../models/user");
-const generateVerificationToken = require("../tokenGenerator");
-const transporter = require("../email");
-const tokenGenerator = require("../tokenGenerator");
+const generateVerificationToken = require("../utilities/tokenGenerator");
+const transporter = require("../utilities/email");
+const tokenGenerator = require("../utilities/tokenGenerator");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 

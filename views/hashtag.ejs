@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') %>
 <h1>Hashtag: <%= hashtag %></h1>
-<p><a class="btn btn-success" href="/posts">Back to posts</a></p>
+<p><a class="btn btn-success" href="/">Back to posts</a></p>
 <% if (posts.length === 0) { %>
   <p>No posts with hashtag <%= hashtag %> yet.</p>
 <% } else { %>
@@ -11,7 +11,7 @@
           <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
           <p>Posted by: <%= post.username %></p>
           <p><%- addHashtagLinks(post.content) %></p>
-          <p><a class="btn btn-info" href="/posts/<%= post._id %>">View full post</a></p>
+          <p><a class="btn btn-info" href="/<%= post._id %>">View full post</a></p>
         </div>
       </div>
     <% }); %>

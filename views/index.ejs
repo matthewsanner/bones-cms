@@ -4,7 +4,7 @@
   <a class="btn btn-warning mb-2" href="/users/register">Register</a>
   <a class="btn btn-success mb-2" href="/users/login">Login</a>
 <% } else { %>
-  <a class="btn btn-primary mb-2" href="/posts/create-post">Make a New Post</a>
+  <a class="btn btn-primary mb-2" href="/create-post">Make a New Post</a>
   <a class="btn btn-danger mb-2" href="/users/logout">Logout</a>
 <% } %>
 <% if (posts.length === 0) { %>
@@ -17,7 +17,7 @@
         <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
         <p>Posted by: <%= post.username %></p>
         <p><%- addHashtagLinks(post.content) %></p>
-        <p><a class="btn btn-info" href="/posts/<%= post._id %>">View full post</a></p>
+        <p><a class="btn btn-info" href="/<%= post._id %>">View full post</a></p>
       </div>
     </div>
   <% }); %>

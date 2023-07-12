@@ -2,7 +2,7 @@
 <div class="card container-md">
   <div class="card-body">
     <h1 class="card-title">Edit Post</h1>
-    <form action="/posts/<%= post._id%>?_method=PUT" method="POST">
+    <form action="/<%= post._id%>?_method=PUT" method="POST">
     <!-- May want to add this back in with validation in place - 'class="validated-form" novalidate' -->
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
@@ -16,7 +16,7 @@
       <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
       <div class="mb-3">
           <button class="btn btn-warning">Update Post</button>
-          <a class="btn btn-success ms-2" href="/posts/<%= post._id%>">Back to Post</a>
+          <a class="btn btn-success ms-2" href="/<%= post._id%>">Back to Post</a>
       </div>
     </form>
   </div>
