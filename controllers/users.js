@@ -52,7 +52,7 @@ module.exports.register = async (req, res, next) => {
           req.flash("info", verificationEmailFlashMessage);
         }
         req.flash("success", "Welcome to Bones CMS!");
-        res.redirect("/posts");
+        res.redirect("/");
       });
     });
   } catch (err) {
@@ -73,11 +73,11 @@ module.exports.handleVerifyToken = async (req, res) => {
     );
 
     req.flash("success", "Email verified successfully!");
-    res.redirect("/posts");
+    res.redirect("/");
   } catch (err) {
     console.error("Error updating user:", err);
     req.flash("error", "Email was not successfully verified");
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };
 
@@ -122,7 +122,7 @@ module.exports.forgot = async (req, res) => {
       } else {
         console.log("Email sent: " + info.response);
         req.flash("success", "Reset password email sent!");
-        res.redirect("/posts");
+        res.redirect("/");
       }
     });
   } catch (err) {
@@ -167,7 +167,7 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
   req.flash("success", "Welcome back!");
-  res.redirect("/posts");
+  res.redirect("/");
 };
 
 module.exports.logout = async (req, res, next) => {
@@ -177,12 +177,12 @@ module.exports.logout = async (req, res, next) => {
         throw new Error("An error occurred during logout. Please try again.");
       }
       req.flash("success", "Logged out!");
-      res.redirect("/posts");
+      res.redirect("/");
     });
   } catch (err) {
     console.error(err);
     req.flash("error", "An error occurred during logout. Please try again.");
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };
 
@@ -262,11 +262,11 @@ module.exports.inviteRegister = async (req, res) => {
     req.login(registeredUser, (err) => {
       if (err) return next(err);
       req.flash("success", "Welcome to Bones CMS!");
-      res.redirect("/posts");
+      res.redirect("/");
     });
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };

@@ -23,4 +23,12 @@ module.exports.isAuthor = async (req, res, next) => {
   next();
 };
 
-module.exports.isSuperadmin = async (req, res, next) => {};
+module.exports.isSuperadmin = async (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role === "superadmin") {
+    // User is a superadmin, move to the next middleware
+    return next();
+  }
+  // User is not a superadmin, flash an error message and redirect
+  req.flash("error", "You do not have permission to access this page.");
+  res.redirect("/"); // Replace with the appropriate redirect URL
+};
