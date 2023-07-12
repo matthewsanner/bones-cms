@@ -1,24 +1,27 @@
 <% layout('layouts/boilerplate') %>
 <h1>Bones Blogging App</h1>
 <% if(!currentUser) {%>
-  <a class="btn btn-warning mb-2" href="/users/register">Register</a>
-  <a class="btn btn-success mb-2" href="/users/login">Login</a>
+<a class="btn btn-warning mb-2" href="/users/register">Register</a>
+<a class="btn btn-success mb-2" href="/users/login">Login</a>
 <% } else { %>
-  <a class="btn btn-primary mb-2" href="/create-post">Make a New Post</a>
-  <a class="btn btn-danger mb-2" href="/users/logout">Logout</a>
-<% } %>
-<% if (posts.length === 0) { %>
-  <p>No posts yet.</p>
-<% } else { %>
-  <% posts.forEach(post => { %>
-    <div class="card my-3">
-      <div class="card-body">
-        <h2><%= post.title %></h2>
-        <p><%= post.date.toLocaleDateString() %>, <%= post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) %></p>
-        <p>Posted by: <%= post.username %></p>
-        <p><%- addHashtagLinks(post.content) %></p>
-        <p><a class="btn btn-info" href="/<%= post._id %>">View full post</a></p>
-      </div>
-    </div>
-  <% }); %>
-<% } %>
+<a class="btn btn-primary mb-2" href="/create-post">Make a New Post</a>
+<a class="btn btn-danger mb-2" href="/users/logout">Logout</a>
+<% } %> <% if(currentUser && currentUser.role === "superadmin") { %>
+<a class="btn btn-secondary mb-2" href="/users/superadmin">Superadmin</a>
+<% } %> <% if (posts.length === 0) { %>
+<p>No posts yet.</p>
+<% } else { %> <% posts.forEach(post => { %>
+<div class="card my-3">
+  <div class="card-body">
+    <h2><%= post.title %></h2>
+    <p>
+      <%= post.date.toLocaleDateString() %>, <%=
+      post.date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      %>
+    </p>
+    <p>Posted by: <%= post.username %></p>
+    <p><%- addHashtagLinks(post.content) %></p>
+    <p><a class="btn btn-info" href="/<%= post._id %>">View full post</a></p>
+  </div>
+</div>
+<% }); %> <% } %>
