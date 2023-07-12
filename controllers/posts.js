@@ -47,7 +47,7 @@ exports.findPost = async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
-    res.redirect("/posts");
+    res.redirect("/");
   }
 };
 
