@@ -185,3 +185,88 @@ module.exports.logout = async (req, res, next) => {
     res.redirect("/posts");
   }
 };
+
+module.exports.renderSuperadmin = (req, res) => {
+  res.render("superadmin");
+};
+
+module.exports.inviteUser = async (req, res) => {
+  try {
+    const { email, role } = req.body;
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      req.flash("error", "An account is already registered with this email");
+      return res.redirect("/users/superadmin");
+    }
+    const verificationToken = generateVerificationToken();
+    const verificationLink = `http://localhost:3000/users/invite/${verificationToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "You've been invited to join Bones CMS!",
+      html: `<p>Please click the following link to finish setting up your account and verify your email:</p>
+           <a href="${verificationLink}">Set up your account</a>`,
+    };
+    const user = new User({ email, role, verificationToken });
+    await user.save();
+
+    // Send verification email
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        throw new Error("Failed to send email invite");
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+
+    req.flash("success", "Email invite sent!");
+    res.redirect("/users/superadmin");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/users/superadmin");
+  }
+};
+
+module.exports.renderInvite = async (req, res) => {
+  try {
+    // Update user's account status as verified
+    await User.updateOne(
+      { email: req.email },
+      { $set: { verified: true, verificationToken: "" } }
+    );
+    req.flash("success", "Email verified successfully!");
+    res.render("invite", { email: req.email, success: req.flash("success") });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    req.flash("error", "Email was not successfully verified");
+    res.render("invite", { email: req.email, error: req.flash("error") });
+  }
+};
+
+module.exports.inviteRegister = async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
+    const user = await User.findOne({ email });
+    user["username"] = username;
+    if (!user) {
+      throw new Error("Invited user not found!");
+    }
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      req.flash("error", "This username is taken, please choose a new one");
+      return res.redirect("/users/invite");
+    }
+    const registeredUser = await User.register(user, password);
+
+    req.login(registeredUser, (err) => {
+      if (err) return next(err);
+      req.flash("success", "Welcome to Bones CMS!");
+      res.redirect("/posts");
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/posts");
+  }
+};

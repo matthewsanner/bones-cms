@@ -31,4 +31,12 @@ router
 
 router.get("/logout", users.logout);
 
+router.post("/superadmin/invite", users.inviteUser);
+
+router.get("/superadmin", users.renderSuperadmin);
+
+router.get("/invite/:token", verifyToken, users.renderInvite);
+
+router.post("/invite", users.inviteRegister);
+
 module.exports = router;

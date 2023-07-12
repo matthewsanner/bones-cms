@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const User = require('./models/user');
+const mongoose = require("mongoose");
+const User = require("./models/user");
 
+// FIX: need to update error handling to newer more user friendly version
 const verifyToken = async (req, res, next) => {
   const { token } = req.params;
 
@@ -9,17 +10,18 @@ const verifyToken = async (req, res, next) => {
     const user = await User.findOne({ verificationToken: token });
 
     if (!user) {
-      return res.send('Invalid token');
+      throw new Error("Invalid token");
     }
 
     // Attach the user object to the request for further processing in the route handler
     req.username = user.username;
-    console.log('Found user with token')
+    req.email = user.email;
+    console.log("Found user with token");
     next();
-  } catch (error) {
-    // Handle any errors that occur during the database query
-    console.error('Error verifying token:', error);
-    res.status(500).send('Internal Server Error');
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/posts");
   }
 };
 
