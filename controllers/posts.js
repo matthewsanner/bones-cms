@@ -22,8 +22,7 @@ exports.getPosts = async (req, res) => {
   } catch (err) {
     // Handle any errors
     console.error(err);
-    req.flash("error", err.message);
-    res.redirect("/");
+    res.send("There was an error rendering the index page!");
   }
 };
 
