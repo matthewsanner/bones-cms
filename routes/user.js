@@ -31,6 +31,7 @@ router
 
 router.get("/logout", users.logout);
 
+// FIX: NEED TO PROTECT SUPERADMIN ROUTES, ONLY ACCESIBLE TO USERS WITH SUPERADMIN ROLE
 router.post("/superadmin/invite", users.inviteUser);
 
 router.get("/superadmin", users.renderSuperadmin);
