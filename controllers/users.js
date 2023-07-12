@@ -300,3 +300,24 @@ module.exports.inviteRegister = async (req, res) => {
     res.redirect("/");
   }
 };
+
+module.exports.changeRole = async (req, res) => {
+  try {
+    const { username, role } = req.body;
+    const user = await User.findOne({ username });
+    if (user) {
+      await User.updateOne(
+        { username: user.username },
+        { $set: { role: role } }
+      );
+      req.flash("success", "User's role was changed successfully");
+      res.redirect("/users/superadmin");
+    } else {
+      throw new Error("User not found");
+    }
+  } catch {
+    console.error(err);
+    req.flash("error", err.message);
+    res.redirect("/users/superadmin");
+  }
+};

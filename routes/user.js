@@ -6,10 +6,7 @@ const verifyToken = require("../utilities/verifyToken");
 const isLoggedIn = require("../utilities/isLoggedIn");
 const isSuperadmin = require("../utilities/isSuperadmin");
 
-router
-  .route("/register")
-  .get(users.renderRegister)
-  .post(catchAsync(users.register));
+router.route("/register").get(users.renderRegister).post(users.register);
 
 router.get("/verify/:token", verifyToken, users.handleVerifyToken);
 
@@ -31,6 +28,13 @@ router
   );
 
 router.get("/logout", users.logout);
+
+router.post(
+  "/superadmin/change-role",
+  isLoggedIn,
+  isSuperadmin,
+  users.changeRole
+);
 
 router.post("/superadmin/invite", isLoggedIn, isSuperadmin, users.inviteUser);
 
