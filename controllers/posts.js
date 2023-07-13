@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
+const Comment = require("../models/comment")
 const addHashtagLinks = require("../utilities/addHashtagLinks");
 
 exports.getPosts = async (req, res) => {
@@ -28,6 +29,7 @@ exports.getPosts = async (req, res) => {
 
 exports.findPost = async (req, res) => {
   const { id } = req.params;
+  
   try {
     const post = await Post.findById(id);
 
@@ -36,19 +38,29 @@ exports.findPost = async (req, res) => {
     }
 
     const user = await User.findById(post.author);
+    const comments = await Comment.find({ postID: post._id });
+    const updatedComments = [];
 
-    // If the post is found, render the view page with the post's information
+    for (const comment of comments) {
+      const user = await User.findById(comment.userID);
+      const updatedComment = { ...comment._doc, username: user.username };
+      updatedComments.push(updatedComment);
+    }
+    
     res.render("post", {
       post,
       user,
+      comments: updatedComments,
       addHashtagLinks: addHashtagLinks,
     });
+
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
     res.redirect("/");
   }
 };
+
 
 exports.viewCreatePost = (req, res) => {
   res.render("createPost");
