@@ -18,6 +18,7 @@ const app = express();
 
 let postsRouter = require("./routes/post");
 let usersRouter = require("./routes/user");
+let commentsRouter = require('./routes/comment');
 
 // Connect to MongoDB
 const dbUrl = process.env.DB_URL;
@@ -95,6 +96,7 @@ app.use((req, res, next) => {
 // Routes Declaration / Root = Posts
 app.use("/", postsRouter);
 app.use("/users", usersRouter);
+app.use("/comments", commentsRouter);
 
 // Listen on Port 3000
 app.listen(3000, () => console.log("Server listening on port 3000..."));

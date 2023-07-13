@@ -27,11 +27,24 @@
   </div>
 </div>
 
-<div class="comments-card ">
-  <h3> Comments </h3>
-  <!-- Render List of Comments Here for Each Post -->
-
+<div class="comments-card">
+  <a class="btn btn-success" href="#" onclick="showCommentBox()">Comment</a>
+  <div id="commentBox" style="display: none;">
+    <form action="/comments/create" method="POST">
+      <label class="form-label" for="commentText"></label>> Comment </label>
+      <input type="hidden" name="postID" value="<%= post._id %>">
+      <textarea id="commentText" name="content" rows="4" cols="50" placeholder="Write your comment"></textarea>
+      <button class="btn btn-primary"> Post Comment </button>
+    </form>
+  </div>
 </div>
+
+<script>
+  function showCommentBox() {
+    const commentBox = document.getElementById('commentBox');
+    commentBox.style.display = 'block';
+  }
+</script>
 
 <!-- Delete Modal -->
 <div
