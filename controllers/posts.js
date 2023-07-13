@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
-const Comment = require("../models/comment")
+const Comment = require("../models/comment");
 const addHashtagLinks = require("../utilities/addHashtagLinks");
 
 exports.getPosts = async (req, res) => {
@@ -28,8 +28,12 @@ exports.getPosts = async (req, res) => {
 };
 
 exports.findPost = async (req, res) => {
+  // if req.params._id is favicon.ico then response immediately
+  if (req.params.id === "favicon.ico") {
+    return res.status(404);
+  }
   const { id } = req.params;
-  
+
   try {
     const post = await Post.findById(id);
 
@@ -46,21 +50,19 @@ exports.findPost = async (req, res) => {
       const updatedComment = { ...comment._doc, username: user.username };
       updatedComments.push(updatedComment);
     }
-    
+
     res.render("post", {
       post,
       user,
       comments: updatedComments,
       addHashtagLinks: addHashtagLinks,
     });
-
   } catch (err) {
     console.error(err);
     req.flash("error", err.message);
     res.redirect("/");
   }
 };
-
 
 exports.viewCreatePost = (req, res) => {
   res.render("createPost");
