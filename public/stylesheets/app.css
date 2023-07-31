@@ -5,3 +5,12 @@
 .wider-input {
   width: 700px;
 }
+
+.comment {
+  width: 275px;
+  border-bottom: solid black;
+}
+
+.comment-author {
+  color: blue;
+}

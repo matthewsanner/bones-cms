@@ -3,12 +3,11 @@ const Post = require('../models/post');
 const User = require('../models/user')
 
 exports.getComments = async (req, res) => {
-  console.log("hit get comments in")
   const comments = await Comment.find().sort("-date");
-  console.log(comments)
 }
 
 exports.createComment = async (req, res) => {
+
   const username = req.session.passport.user;
 
   try {
@@ -28,7 +27,7 @@ exports.createComment = async (req, res) => {
     });
 
     await comment.save();
-    res.redirect("../");
+    res.redirect(`/${req.body.postID}`);
 
   } catch (error) {
     console.error(error);

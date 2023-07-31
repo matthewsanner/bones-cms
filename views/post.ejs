@@ -27,28 +27,48 @@
   </div>
 </div>
 
-<div class="comments-card">
-  <h3>Comments:</h3>
+<div class="comments-wrapper">
+  <h4 class='mt-3'>Comments:</h4>
   <% comments.forEach(function(comment) { %>
-    <div class="comment">
-      <p><strong><%= comment.username %></strong></p>
-      <p><%= comment.content %></p>
+    <div class="m-3 comment">
+      <p> <%= comment.content %> </p>
+      <p> 
+        <div class="comment-author"> by <%= comment.username %> </div> 
+        <div class="comment-date"> <%= comment.date %> </div> 
+      </p>
     </div>
   <% }) %>
 
-  <a class="btn btn-success" href="#" onclick="showCommentBox()">Comment</a>
+  <% if (userSession) { %>
+    <!-- Show the comment button only if the user is logged in -->
+    <a class="btn btn-success" href="#" onclick="showCommentBox(event)">Comment</a>
+  <% } else { %>
+    <!-- Show a link to the registration page if the user is not logged in -->
+    <a class="btn btn-primary" href="/users/register">Register to Comment</a>
+  <% } %>
+
   <div id="commentBox" style="display: none;">
     <form action="/comments/create" method="POST">
-      <label class="form-label" for="commentText"></label>> Comment </label>
-      <input type="hidden" name="postID" value="<%= post._id %>">
-      <textarea id="commentText" name="content" rows="4" cols="50" placeholder="Write your comment"></textarea>
-      <button class="btn btn-primary"> Post Comment </button>
+      <div>
+        <label class="form-label" for="commentText">Comment</label>
+      </div>
+      <div>
+        <input type="hidden" name="postID" value="<%= post._id %>">
+      </div>
+      <div>
+        <textarea id="commentText" name="content" rows="4" cols="50" placeholder="Write your comment"></textarea>
+      </div>
+      <div>
+        <button class="btn btn-primary">Post Comment</button>
+      </div>
     </form>
   </div>
+  
 </div>
 
 <script>
-  function showCommentBox() {
+  function showCommentBox(event) {
+    event.preventDefault();
     const commentBox = document.getElementById('commentBox');
     commentBox.style.display = 'block';
   }
