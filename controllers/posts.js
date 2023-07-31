@@ -1,3 +1,4 @@
+const moment = require("moment");
 const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
@@ -44,15 +45,23 @@ exports.findPost = async (req, res) => {
     const user = await User.findById(post.author);
     const comments = await Comment.find({ postID: post._id });
     const updatedComments = [];
+    
+    if (req.user) {
+      userSession = req.user
+    } else {
+      userSession = null
+    };
 
     for (const comment of comments) {
       const user = await User.findById(comment.userID);
-      const updatedComment = { ...comment._doc, username: user.username };
+      const formattedDate = moment(comment.date).format("ddd MMM D YYYY");
+      const updatedComment = { ...comment._doc, username: user.username, date: formattedDate };
       updatedComments.push(updatedComment);
     }
 
     res.render("post", {
       post,
+      userSession,
       user,
       comments: updatedComments,
       addHashtagLinks: addHashtagLinks,
