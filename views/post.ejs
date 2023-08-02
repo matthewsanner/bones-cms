@@ -31,13 +31,73 @@
   <h4 class='mt-3'>Comments:</h4>
   <% comments.forEach(function(comment) { %>
     <div class="m-3 comment">
-      <p> <%= comment.content %> </p>
+      <% if (comment.editMode) { %>
+        <!-- Show the textarea and "Post Comment" button when in edit mode -->
+        <textarea id="editTextArea_<%= comment._id %>" rows="4" cols="50"><%= comment.content %></textarea>
+        <button class="btn btn-primary" onclick="postEditedComment('<%= comment._id %>')">Post Comment</button>
+      <% } else { %>
+        <!-- Show the comment content when not in edit mode -->
+        <p><%= comment.content %></p>
+      <% } %>
       <p> 
         <div class="comment-author"> by <%= comment.username %> </div> 
         <div class="comment-date"> <%= comment.date %> </div> 
+        <% if (userSession._id && comment.userID === userSession._id.toString()) { %>
+          <!-- Show the edit and delete links only for the comments that belong to the current logged-in user -->
+          <div>
+            <a href="#" onclick="toggleEditMode('<%= comment._id %>')">Edit</a>
+            <a href="/comments/delete/<%= comment._id %>">Delete</a>
+          </div>
+        <% } %>
       </p>
     </div>
   <% }) %>
+</div>
+
+<script>
+  // Function to toggle edit mode
+  function toggleEditMode(commentId) {
+    const textarea = document.getElementById(`editTextArea_${commentId}`);
+    const editButton = document.querySelector(`a[href="#"][onclick="toggleEditMode('${commentId}')"]`);
+
+    if (textarea.style.display === 'none') {
+      // Show the textarea and change the button text
+      textarea.style.display = 'block';
+      editButton.innerText = 'Cancel';
+    } else {
+      // Hide the textarea and change the button text
+      textarea.style.display = 'none';
+      editButton.innerText = 'Edit';
+    }
+  }
+
+  // Function to post the edited comment
+  async function postEditedComment(commentId) {
+    const textarea = document.getElementById(`editTextArea_${commentId}`);
+    const content = textarea.value;
+
+    try {
+      const response = await fetch(`/comments/edit/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+
+      if (response.ok) {
+        // Reload the page to see the updated comment
+        window.location.reload();
+      } else {
+        console.error('Failed to update comment.');
+      }
+    } catch (error) {
+      console.error('Error updating comment:', error);
+    }
+  }
+</script>
+
+
 
   <% if (userSession) { %>
     <!-- Show the comment button only if the user is logged in -->
@@ -50,7 +110,7 @@
   <div id="commentBox" style="display: none;">
     <form action="/comments/create" method="POST">
       <div>
-        <label class="form-label" for="commentText">Comment</label>
+        <label class="form-label" for="commentText"> </label>
       </div>
       <div>
         <input type="hidden" name="postID" value="<%= post._id %>">
@@ -63,7 +123,7 @@
       </div>
     </form>
   </div>
-  
+
 </div>
 
 <script>

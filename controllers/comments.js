@@ -36,3 +36,52 @@ exports.createComment = async (req, res) => {
 
 };
 
+exports.deleteComment = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const comment = await Comment.findById(id);
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
+
+    // Check if the comment's userID matches the current logged-in user's ID
+    if (comment.userID.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'You are not authorized to delete this comment' });
+    }
+
+    // If the user is authorized, delete the comment
+    await Comment.findByIdAndDelete(id);
+    res.redirect(`/${comment.postID}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.editComment = async (req, res) => {
+  const { id } = req.params;
+  const { content } = req.body;
+
+  try {
+    const comment = await Comment.findById(id);
+
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
+
+    // Check if the comment's userID matches the current logged-in user's ID
+    if (comment.userID.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'You are not authorized to edit this comment' });
+    }
+
+    // If the user is authorized, update the comment content
+    comment.content = content;
+    await comment.save();
+    res.redirect(`/${comment.postID}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
