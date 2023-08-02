@@ -115,6 +115,12 @@ exports.createPost = async (req, res) => {
 exports.deletePost = async (req, res) => {
   const { id } = req.params;
   try {
+    await Comment.deleteMany({postID: id});
+  } catch (err) {
+    console.error(err);
+    req.flash("error", err.message)
+  }
+  try {
     await Post.findByIdAndDelete(id);
     res.redirect("/");
   } catch (err) {
